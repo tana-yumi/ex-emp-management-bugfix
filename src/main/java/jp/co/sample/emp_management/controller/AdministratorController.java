@@ -63,6 +63,7 @@ public class AdministratorController {
 		return "administrator/insert";
 	}
 
+	
 	/**
 	 * 管理者情報を登録します.
 	 * 
@@ -80,6 +81,11 @@ public class AdministratorController {
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
 		
+		return "redirect:/index";
+	}
+	
+	@RequestMapping("/index")
+	public String index() {
 		return "administrator/login";
 	}
 
