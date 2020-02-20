@@ -59,7 +59,7 @@ public class AdministratorController {
 	 * @return 管理者登録画面
 	 */
 	@RequestMapping("/toInsert")
-	public String toInsert(Model model) {
+	public String toInsert() {
 		return "administrator/insert";
 	}
 
@@ -73,26 +73,34 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result, RedirectAttributes redirectAttributes, Model model ) {
-		if(result.hasErrors()) {
-			return toInsert(model);
-		}
-		if(!(form.getCheckPassword().equals(form.getPassword()))) {
-			model.addAttribute("errorMessage2", "パスワードと確認用パスワードが一致していません。");
-			return "administrator/insert";
-		}		
 		
-		// フォームからドメインにプロパティ値をコピー
+		if(result.hasErrors()) {
+			return toInsert();
+		}
+
+		if(((administratorService.findByMailAddress(form.getMailAddress())) != null) || (!(form.getCheckPassword().equals(form.getPassword()))) ) {
+			
+			if((administratorService.findByMailAddress(form.getMailAddress())) != null){
+				result.rejectValue("mailAddress", "errorMessage3", "このメールアドレスは既に登録されています。");
+			}
+			if(!(form.getCheckPassword().equals(form.getPassword()))) {
+				result.rejectValue("password", "errorMessage2", "パスワードと確認用パスワードが一致していません。");
+				//return "administrator/insert";
+			}
+			return toInsert();
+		}		
 		Administrator administrator = new Administrator();
+		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
-		return "redirect:/index";
-
-	}
+		return "redirect:/";
+		}
 	
-	@RequestMapping("/index")
-	public String index() {
-		return "administrator/login";
-	}
+	
+//	@RequestMapping("/index")
+//	public String index() {
+//		return "administrator/login";
+//	}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：ログインをする
