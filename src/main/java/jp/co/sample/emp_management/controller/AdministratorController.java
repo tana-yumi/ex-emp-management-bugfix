@@ -60,6 +60,7 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/toInsert")
 	public String toInsert() {
+		//System.out.println(10/0);
 		return "administrator/insert";
 	}
 
