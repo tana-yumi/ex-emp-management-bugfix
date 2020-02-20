@@ -77,7 +77,6 @@ public class AdministratorController {
 		if(result.hasErrors()) {
 			return toInsert();
 		}
-
 		if(((administratorService.findByMailAddress(form.getMailAddress())) != null) || (!(form.getCheckPassword().equals(form.getPassword()))) ) {
 			
 			if((administratorService.findByMailAddress(form.getMailAddress())) != null){
